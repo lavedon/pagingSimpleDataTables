@@ -1,5 +1,4 @@
 import { Component, AfterViewInit } from '@angular/core';
-import 'datatables.net';
 declare var $: any;
 
 @Component({
@@ -10,9 +9,10 @@ declare var $: any;
 export class MyTableComponent implements AfterViewInit {
   ngAfterViewInit() {
     // No need to use $(document).read() in ngAfterViewInit
-      ($('#dataTable') as any).DataTable({
+    ($('#dataTable') as any).DataTable({
         "processing": true,
         "serverSide": true,
+        "lengthMenu": [[50, 100, 500], [50, 100, 500]], // Move this here
         "ajax": (data: any, callback: any, settings: any) => {
           let pageIndex = data.start / data.length; // calculate the current page index
           let pageSize = data.length; // calculate the page size
@@ -22,8 +22,8 @@ export class MyTableComponent implements AfterViewInit {
 
           $.ajax({
               url: searchTerm
-                  ? 'http://localhost:5000/api/data/search/${pageIndex}/${pageSize}' // use search
-                  : 'http://localhost:5000/api/data/${pageIndex}/${pageSize}', // use pagination'
+                  ? `http://localhost:5000/api/data/search/${pageIndex}/${pageSize}` // use search
+                  : `http://localhost:5000/api/data/${pageIndex}/${pageSize}`, // use pagination'
               type: 'GET',
               data: {
                 sortColumn: sortColumn,
@@ -46,8 +46,6 @@ export class MyTableComponent implements AfterViewInit {
             { "data" : "age" },
             { "data" : "email" }
           ]
-        });
-              
-      }
+        });   
+    }
 }
-
